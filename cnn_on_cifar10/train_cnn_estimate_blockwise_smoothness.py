@@ -1,5 +1,5 @@
 #############################################
-#                  Setup                    #
+#                 Setup                     #
 #############################################
 
 import os
@@ -66,8 +66,8 @@ def zeropower_via_newtonschulz5(G, steps=5):
 
 
 def zeroth_power_via_svd(G):
-   U, S, V = G.svd()
-   return U @ V.T
+    U, S, V = G.svd()
+    return U @ V.T
 
 class Norm(object):
     def lmo(self, g):
@@ -110,12 +110,14 @@ class SpectralConv(Norm):
     
     def init(self, w):
         w_fp = w.data.double()
-        k = w.data.size(2)
+        # new: der Code kann eigentlich hier schon stehen
+        out_channels, in_channels, k, _ = w_fp.shape
+        # old: k = w.data.size(2)
         for kx in range(k):
             for ky in range(k):
                 torch.nn.init.orthogonal_(w_fp[:,:,kx,ky])
         
-        out_channels, in_channels, k, _ = w_fp.shape
+        # old: out_channels, in_channels, k, _ = w_fp.shape
         w_fp.mul_((out_channels / in_channels)**0.5 / (k ** 2))
         w.data = w_fp.to(dtype=w.data.dtype)
         return w
@@ -128,7 +130,9 @@ class Spectral(Norm):
         self.normalized = normalized
 
     def lmo(self, g):
-        g = zeropower_via_newtonschulz5(g.reshape(len(g), -1), steps=self.steps).view(g.shape)
+        # old: g = zeropower_via_newtonschulz5(g.reshape(len(g), -1), steps=self.steps).view(g.shape)
+        # new: (reshape und view sollten nicht noetig sein, da man bereits eine 2D Matrix hat)
+        g = zeropower_via_newtonschulz5(g, steps=self.steps)
         d_out, d_in = g.shape
         
         if self.normalized:
@@ -177,14 +181,14 @@ class Sign(Norm):
     def lmo(self, g):
         d_out, d_in = g.shape
         if self.normalized:
-            return (1/d_in)*torch.sign(g)    
+            return (1/d_in)*torch.sign(g)   
         else:
             return torch.sign(g)
 
     def calculate_norm(self, p):
         d_out, d_in = p.shape
         if self.normalized:
-            return d_in*torch.max(torch.abs(p))    
+            return d_in*torch.max(torch.abs(p))   
         else:
             return torch.max(torch.abs(p))
 
@@ -528,7 +532,7 @@ def print_training_details(variables, is_final_entry):
     print_columns(formatted, is_final_entry=is_final_entry)
 
 ############################################
-#               Evaluation                 #
+#                Evaluation                #
 ############################################
 
 def infer(model, loader, tta_level=0):
@@ -571,7 +575,7 @@ def evaluate(model, loader, tta_level=0):
     return (logits.argmax(1) == loader.labels).float().mean().item()
 
 ############################################
-#                Training                  #
+#                 Training                 #
 ############################################
 
 def main(model):

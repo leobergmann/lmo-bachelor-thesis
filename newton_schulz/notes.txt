@@ -1,0 +1,1 @@
+pip install nvidia-cudnn-cu12==9.1.0.70 nvidia-cublas-cu12==12.4.5.8 nvidia-cuda-nvrtc-cu12==12.4.127

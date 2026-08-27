@@ -393,8 +393,8 @@ class DistributedDataLoader:
 @dataclass
 class Hyperparameters:
     # data hyperparams
-    input_bin : str = 'data/fineweb10B/fineweb_train_*.bin' # input .bin to train on
-    input_val_bin : str = 'data/fineweb10B/fineweb_val_*.bin' # input .bin to eval validation loss on
+    input_bin : str = '/local/hdd/bergmann/fineweb10B/fineweb_train_*.bin' #'data/fineweb10B/fineweb_train_*.bin' # input .bin to train on
+    input_val_bin : str = '/local/hdd/bergmann/fineweb10B/fineweb_val_*.bin' #'data/fineweb10B/fineweb_val_*.bin' # input .bin to eval validation loss on
     # optimization hyperparams
     batch_size : int = 8*64 # batch size, in sequences, across all devices
     device_batch_size : int = 32 # batch size, in sequences, per device
@@ -501,14 +501,20 @@ config_keys = [k for k, v in vars(args).items() if not k.startswith('_') and isi
 configuration = {k: vars(args)[k] for k in config_keys}
 if wandb_log and master_process:
     import wandb
-    run = wandb.init(project=wandb_project, name=wandb_run_name, config=configuration)
+    # NEW
+    os.makedirs('/local/hdd/bergmann/wandb', exist_ok=True)
+    run = wandb.init(project=wandb_project, name=wandb_run_name, config=configuration, dir='/local/hdd/bergmann/wandb')
 
 # begin logging
 if master_process:
     run_id = str(uuid.uuid4())
-    logdir = 'logs/%s/' % run_id
+    # OLD logdir = 'logs/%s/' % run_id
+    # NEW 
+    logdir = '/local/hdd/bergmann/logs/%s/' % run_id
     os.makedirs(logdir, exist_ok=True)
-    logfile = 'logs/%s.txt' % run_id
+    # OLD logfile = 'logs/%s.txt' % run_id
+    # NEW
+    logfile = '/local/hdd/bergmann/logs/%s.txt' % run_id
     # create the log file
     with open(logfile, "w") as f:
         # begin the log by printing this file (the Python code)
@@ -571,7 +577,9 @@ for step in range(args.num_iterations + 1):
         training_time_ms += 1000 * (time.time() - t0)
         # save the state of the training process
         log = dict(step=step, code=code, model=raw_model.state_dict(), optimizers=[opt.state_dict() for opt in optimizers])
-        torch.save(log, 'logs/%s/state_step%06d.pt' % (run_id, step))
+        #OLD torch.save(log, 'logs/%s/state_step%06d.pt' % (run_id, step))
+        #NEW
+        torch.save(log, '/local/hdd/bergmann/logs/%s/state_step%06d.pt' % (run_id, step))
         # start the clock again
         torch.cuda.synchronize()
         t0 = time.time()

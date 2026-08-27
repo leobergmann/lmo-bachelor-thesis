@@ -1,27 +1,33 @@
-# Layer-Wise Trajectory Smoothness Evaluation for NanoGPT and CNN Models
+# Layer-Wise Smoothness Evaluation & Optimizer Benchmarks (unScion / Gluon)
 
-This repository contains code to evaluate **layer-wise trajectory smoothness** along training trajectories of:
-- **NanoGPT** model trained on the **FineWeb** dataset.
-- **CNN** model trained on **CIFAR-10**.
+This repository contains code to evaluate **layer-wise trajectory smoothness** $(L^0, L^1)$, explore **generalized Newton-Schulz iterations**, and benchmark optimizers (**unScion**, **AdamW**, **SGD**) across different network architectures and datasets.
 
-The approach builds upon and extends ideas from the following open-source repositories:
-- [modded-nanogpt](https://github.com/KellerJordan/modded-nanogpt)
-- [scion](https://github.com/LIONS-EPFL/scion)
-- [cifar-10 airbench](https://github.com/KellerJordan/cifar10-airbench)
+The codebase extends the original work on **Gluon / Scion** by Riabinin et al., **Muon** by Keller Jordan et al., and polynomial coefficient optimization by Cesista et al.
+
+---
+
+## Features & Extensions
+
+* **Architectures & Datasets**:
+  * **NanoGPT** trained on **FineWeb-10B**.
+  * **CNNs** evaluated on **CIFAR-10**, **CIFAR-100**, and **MNIST**.
+  * **Feedforward Neural Networks (FNN)** with Dropout and Batch Normalization trained on the robotics regression dataset **kin8nm**.
+* **Optimizer Comparisons & Tuning**:
+  * Full integration and Hyperparameter Optimization (using **Optuna**) for **AdamW** and **SGD**.
+  * Support for individual, per-layer step sizes and scaling factors ($t_i$) in unScion.
+* **Generalized Newton-Schulz Iteration**:
+  * Optimization of high-order polynomials for matrix orthogonalization based on the approach by **Cesista et al.**
+  * Learning rate scheduling and increased sample density for polynomial fitting in $[0, 1]$.
+  * Comparative evaluation against standard Newton-Schulz (Jordan et al.) and the *Modula* library.
+* **Empirical & Theoretical Smoothness Analysis**:
+  * Layer-wise $(L^0, L^1)$-smoothness estimation over varying training durations (8 to 160 epochs) and learning rates.
+  * Practical validation of theoretically derived step sizes $t_i = \frac{1}{12 L_i^1}$.
+
+---
 
 ## Dataset Preparation
 
-To download and cache the **FineWeb** dataset, run:
+To download and cache the **FineWeb-10B** dataset for NanoGPT:
 
 ```bash
 python data/cached_fineweb10B.py 8
-```
-
-## Running Smoothness Evaluation
-
-To estimate the layer-wise smoothness for the **NanoGPT** model, run the following example command:
-
-```bash
-torchrun --standalone --nproc_per_node=4 train_gpt_unscion_estimate_blockwise_smoothness.py
-```
-This will run the evaluation using PyTorch Distributed Data Parallel (DDP) on a node with 4× A100 40GB GPUs.

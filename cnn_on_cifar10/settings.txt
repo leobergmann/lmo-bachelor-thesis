@@ -1,0 +1,25 @@
+#############################################
+# Setting des aktuellen Experiments:
+# - Cnn
+# - uS: unScion
+# - CIF: CIFAR10
+# - nS: ohne Scheduler
+# - lr: learning_rate = 0.5
+# - exs: explizite scales (use_L1_calculated_scale=False):
+#       + radius = 1.0
+#       + scale_factor = 100
+# - mom: momentum = 0.5
+#############################################
+
+#############################################
+# Setting des aktuellen Experiments:
+# - Cnn
+# - uS: unScion
+# - CIF: CIFAR10
+# - nS: ohne Scheduler
+# - L1cs: use_L1_calculated_scale=True
+#       + L1_conv = 3.0
+#       + L1_norm = 4.0
+#       + L1_head = 0.04
+# - mom: momentum = 0.5
+#############################################

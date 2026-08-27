@@ -1,0 +1,44 @@
+{
+  "os": "Linux-6.12.74+deb13+1-amd64-x86_64-with-glibc2.41",
+  "python": "CPython 3.13.5",
+  "startedAt": "2026-04-14T22:17:56.159954Z",
+  "args": [
+    "--num-iterations",
+    "20"
+  ],
+  "program": "/home/bergmann/Gluon1/Experiments-estimating-smoothness-for-NanoGPT-and-CNN/nanogpt/train_gpt_unscion_estimate_blockwise_smoothness.py",
+  "codePath": "nanogpt/train_gpt_unscion_estimate_blockwise_smoothness.py",
+  "codePathLocal": "train_gpt_unscion_estimate_blockwise_smoothness.py",
+  "git": {
+    "remote": "https://github.com/artem-riabinin/Experiments-estimating-smoothness-for-NanoGPT-and-CNN.git",
+    "commit": "26769e39a74dd8f0dad2fc61bf4eb5c4a37becf5"
+  },
+  "email": "s29lberg@uni-bonn.de",
+  "root": "/home/bergmann/Gluon1/Experiments-estimating-smoothness-for-NanoGPT-and-CNN/nanogpt",
+  "host": "delta-gpu",
+  "executable": "/home/bergmann/Gluon1/bin/python",
+  "cpu_count": 32,
+  "cpu_count_logical": 32,
+  "gpu": "NVIDIA A100-PCIE-40GB",
+  "gpu_count": 1,
+  "disk": {
+    "/": {
+      "total": "1864817098752",
+      "used": "80255692800"
+    }
+  },
+  "memory": {
+    "total": "270041714688"
+  },
+  "gpu_nvidia": [
+    {
+      "name": "NVIDIA A100-PCIE-40GB",
+      "memoryTotal": "42949672960",
+      "cudaCores": 6912,
+      "architecture": "Ampere",
+      "uuid": "GPU-d00351fb-2854-3b6b-825c-2f9b34524c98"
+    }
+  ],
+  "cudaVersion": "12.4",
+  "writerId": "4po0tsalwqcaf1pu27rwlakaaxkkoxt7"
+}
